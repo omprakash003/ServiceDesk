@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: servicedesk
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: expa
+    password: expa
+    driver-class-name: oracle.jdbc.OracleDriver
+server:
+  port: 8082
+
