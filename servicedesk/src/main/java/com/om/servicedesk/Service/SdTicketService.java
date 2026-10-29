@@ -12,6 +12,8 @@ import com.om.servicedesk.Repos.SdUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SdTicketService {
     @Autowired
@@ -20,6 +22,12 @@ public class SdTicketService {
     private SdUserRepo userRepo;
     @Autowired
     private SdHistoryRepo historyRepo;
+    public List<SdTickets> getAll(){
+        return ticketsRepo.findAll();
+    }
+    public List<SdTickets>getByUserName(String userName){
+        return ticketsRepo.getByUsername(userName);
+    }
     public boolean raiseTicket(InsertTicketsDTO ticketDTO,Long UserId){
         SdUser user=userRepo.findById(UserId).orElseThrow(()-> new ResourceNotFoundException("Invalid User Id"));
         SdTickets ticket=new SdTickets();

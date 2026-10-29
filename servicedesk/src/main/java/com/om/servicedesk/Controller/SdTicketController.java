@@ -2,17 +2,39 @@ package com.om.servicedesk.Controller;
 
 import com.om.servicedesk.DTO.InsertTicketsDTO;
 import com.om.servicedesk.DTO.TicketResponseDTO;
+import com.om.servicedesk.Entity.SdTickets;
+import com.om.servicedesk.Exceptions.ResourceNotFoundException;
 import com.om.servicedesk.Service.SdTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tickets")
 public class SdTicketController {
     @Autowired
     private SdTicketService ticketService;
+
+    @GetMapping("/get/all")
+    public ResponseEntity<List<TicketResponseDTO>>getAll(){
+        List<SdTickets> list=ticketService.getAll();
+        if(list.isEmpty()){
+            throw new ResourceNotFoundException("No tickets found");
+        }
+        return new ResponseEntity<>(TicketResponseDTO.getList(list),HttpStatus.OK);
+    }
+    @GetMapping("/get/{userName}")
+    public ResponseEntity<List<TicketResponseDTO>>getByUserName(@PathVariable String userName){
+        List<SdTickets>list=ticketService.getByUserName(userName);
+        if(list.isEmpty()){
+            throw new ResourceNotFoundException("No ticket found for the user "+ userName);
+        }
+        return new ResponseEntity<>(TicketResponseDTO.getList(list),HttpStatus.OK);
+    }
+
     @PostMapping("/create/{userId}")
     public ResponseEntity<String> raiseTicket(@RequestBody InsertTicketsDTO ticket, @PathVariable Long userId){
         ticketService.raiseTicket(ticket,userId);
